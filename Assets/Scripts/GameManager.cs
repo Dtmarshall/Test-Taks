@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public Material brush;
     public Texture2D brushTexture;
 
+    public Canvas canvas;
     public GameObject drawBar;
     bool draw;
     bool win;
@@ -105,11 +106,14 @@ public class GameManager : MonoBehaviour
 
     public void Draw()
     {
+        Vector2 size = new Vector2(renderTexture.width * canvas.scaleFactor, renderTexture.height * canvas.scaleFactor);
+        Vector2 mousePos = (Vector2)(Input.mousePosition - drawBar.transform.position) + size / 2 - new Vector2(7, 7);
+
         RenderTexture.active = renderTexture;
 
         GL.PushMatrix();
         GL.LoadPixelMatrix(0, renderTexture.width, 0, renderTexture.height);
-        Graphics.DrawTexture(new Rect(Input.mousePosition.x * ((float)renderTexture.width / Screen.width), Input.mousePosition.y * ((float)renderTexture.height / Screen.height), 40, 40), brushTexture, brush);
+        Graphics.DrawTexture(new Rect((mousePos.x / size.x) * renderTexture.width, (mousePos.y / size.y) * renderTexture.height, 40, 40), brushTexture, brush);
         GL.PopMatrix();
 
         RenderTexture.active = null;
